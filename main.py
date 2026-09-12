@@ -1,13 +1,18 @@
 import pyxel
 import random
+import os
 
 class RPG:
     def __init__(self):
         pyxel.init(160, 120, title="Average RPG Pyxel")
         pyxel.mouse(True)
         
+        # identificar local da imagem
+        pasta_do_jogo = os.path.dirname(os.path.abspath(__file__))
+        caminho_da_arte = os.path.join(pasta_do_jogo, "rpg.pyxres")
+        
         try:
-            pyxel.load("rpg.pyxres")
+            pyxel.load(caminho_da_arte)
         except:
             pass
             
@@ -21,7 +26,6 @@ class RPG:
         self.pocoes = 3
         self.defendendo = False
         
-        # variavel dano chefe
         self.timer_chefe = 0
         self.dano_pendente = 0
         self.msg_chefe = ""
@@ -64,7 +68,6 @@ class RPG:
                             self.defendendo = False
                             self.turno = "chefe_decide"
                         
-            # sorteio do chefe
             elif self.turno == "chefe_decide":
                 chance = random.randint(1, 100)
                 
@@ -78,10 +81,9 @@ class RPG:
                 if self.defendendo:
                     self.dano_pendente = self.dano_pendente // 2 
                     
-                self.timer_chefe = 45
+                self.timer_chefe = 45 
                 self.turno = "chefe_espera"
                     
-            # msg fica ate toma odano
             elif self.turno == "chefe_espera":
                 self.timer_chefe -= 1
                 if self.timer_chefe <= 0:
@@ -117,7 +119,6 @@ class RPG:
                     pyxel.text(106, 95, "VAZIO", 7)
                 
             elif self.turno == "chefe_espera":
-                # diferença nas cor da msg
                 cor_msg = 8 if self.msg_chefe == "ATAQUE CRITICO!" else 9
                 pyxel.text(55, 15, self.msg_chefe, cor_msg)
 
