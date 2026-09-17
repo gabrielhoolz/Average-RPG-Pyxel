@@ -3,45 +3,45 @@ import random
 import os
 
 class RPG:
-    def __init__(self):
+    def __init__(self): # criador da janela do jogo
         pyxel.init(160, 120, title="Average RPG Pyxel")
         pyxel.mouse(True)
         
         # identificar local da imagem
         pasta_do_jogo = os.path.dirname(os.path.abspath(__file__))
         caminho_da_arte = os.path.join(pasta_do_jogo, "rpg.pyxres")
-        
+        # carrega a arte usando o caminho, o try serve pra n crashar o jogo caso n ache
         try:
             pyxel.load(caminho_da_arte)
         except:
             pass
             
-        self.tela = "menu"
-        
+        self.tela = "menu" # menu inicial
+        # atributos iniciais do combate
         self.hp_jogador = 100
         self.hp_max = 100
         self.hp_chefe = 150
         self.turno = "jogador"
-        
+        # variavel pocoes e  recursos
         self.pocoes = 3
         self.defendendo = False
-        
+        # variavel tempo do ataque
         self.timer_chefe = 0
         self.dano_pendente = 0
         self.msg_chefe = ""
-        
+        # loop infinito 30 fps
         pyxel.run(self.update, self.draw)
-
+    # cerebro do jogo
     def update(self):
         if pyxel.btnp(pyxel.KEY_Q):
-            pyxel.quit()
+            pyxel.quit() # fecha o jogo qlqr hr apertando Q
             
         if self.tela == "menu":
             if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT):
                 if 40 <= pyxel.mouse_x <= 120 and 50 <= pyxel.mouse_y <= 70:
-                    self.tela = "batalha"
+                    self.tela = "batalha" # se clicar dentro das coordenadas muda para batalha
                     
-        elif self.tela == "batalha":
+        elif self.tela == "batalha": # verificacao de morte
             if self.hp_chefe <= 0:
                 self.tela = "vitoria"
             elif self.hp_jogador <= 0:
@@ -68,28 +68,28 @@ class RPG:
                             self.defendendo = False
                             self.turno = "chefe_decide"
                         
-            elif self.turno == "chefe_decide":
+            elif self.turno == "chefe_decide": # turno do chefe
                 chance = random.randint(1, 100)
                 
-                if chance <= 20: 
+                if chance <= 20: #ataque critico
                     self.dano_pendente = 25
                     self.msg_chefe = "ATAQUE CRITICO!"
                 else: 
-                    self.dano_pendente = random.randint(8, 12)
+                    self.dano_pendente = random.randint(8, 12) # dano aleatorio normal
                     self.msg_chefe = "O Chefe ataca!"
                 
                 if self.defendendo:
-                    self.dano_pendente = self.dano_pendente // 2 
+                    self.dano_pendente = self.dano_pendente // 2 #ataque defendido
                     
                 self.timer_chefe = 45 
-                self.turno = "chefe_espera"
+                self.turno = "chefe_espera" # tempo de espera do chefe
                     
             elif self.turno == "chefe_espera":
                 self.timer_chefe -= 1
                 if self.timer_chefe <= 0:
                     self.hp_jogador -= self.dano_pendente
                     self.turno = "jogador"
-
+    # arte do jogo e menus
     def draw(self):
         pyxel.cls(0)
         
