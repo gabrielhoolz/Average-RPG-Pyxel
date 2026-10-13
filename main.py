@@ -471,4 +471,8 @@ class RPG:
             pyxel.text(55, 80, "Aperte ESC para sair", 6)
 
 #executa o jogo
+<<<<<<< HEAD
 RPG()
+=======
+RPG()
+>>>>>>> bddf3f378dbd7bdfe78beae3a30e3a31765ff06e
